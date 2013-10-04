@@ -42,10 +42,16 @@ public class Board {
 							cells.add(wCell);
 						} else {
 							char initial = line[i].charAt(0);
+							for (char roomK : rooms.keySet()) {
+								if (initial == roomK)
+									continue;
+								else
+									throw new BadConfigFormatException("Invalid Room");
+							}
 							RoomCell rCell = new RoomCell(currentRow, i, initial, DoorDirection.NONE);
 							cells.add(rCell);
 						}
-					} else {
+					} else if (line[i].length() == 2) {
 						char initial = line[i].charAt(0);
 						char charD = line[i].charAt(1);
 						DoorDirection doorDirection = DoorDirection.NONE;
@@ -60,6 +66,8 @@ public class Board {
 						}
 						RoomCell rCell = new RoomCell(currentRow, i, initial, doorDirection);
 						cells.add(rCell);
+					} else {
+						throw new BadConfigFormatException("Too long of room string");
 					}
 				}
 				currentRow++;
@@ -68,6 +76,8 @@ public class Board {
 			in.close();
 		} catch (FileNotFoundException e1) {
 			System.out.println(e1);
+		} catch (BadConfigFormatException e2) {
+			System.out.println(e2);
 		}
 		
 		try {
@@ -76,11 +86,16 @@ public class Board {
 			String[] line;
 			while (in.hasNextLine()) {
 				line = in.nextLine().split(", ");
+				if (line.length > 2) {
+					throw new BadConfigFormatException("Bad Legend File");
+				}
 				rooms.put(line[0].charAt(0), line[1]);
 			}
 			in.close();
 		} catch (FileNotFoundException e1) {
 			System.out.println(e1);
+		} catch (BadConfigFormatException e2) {
+			System.out.println(e2);
 		}
 	}
 	
