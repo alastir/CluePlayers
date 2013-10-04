@@ -7,16 +7,11 @@ import java.util.Scanner;
 public class RoomCell extends BoardCell {
 	enum DoorDirection {UP, DOWN, LEFT, RIGHT, NONE};
 	
-	private DoorDirection doorDirection;
-	protected char roomInitial;
+	protected DoorDirection doorDirection;
+	private char roomInitial;
 	
 	public RoomCell(int row, int column) {
 		super(row, column);
-	}
-	
-	public RoomCell(int row, int column, char roomInitial) {
-		super(row, column);
-		this.roomInitial = roomInitial;
 	}
 	
 	public RoomCell(int row, int column, char roomInitial, DoorDirection doorDirection) {
@@ -29,11 +24,11 @@ public class RoomCell extends BoardCell {
 		return true;
 	}
 	
-	public boolean isDoorWay() {
-		if (doorDirection != DoorDirection.NONE) {
+	public boolean isDoorway() {
+		if (doorDirection != DoorDirection.NONE)
 			return true;
-		}
-		return false;
+		else
+			return false;
 	}
 	
 	public DoorDirection getDoorDirection() {

@@ -36,30 +36,30 @@ public class Board {
 				line = in.nextLine().split(",");
 				numColumns = line.length;
 				for (int i = 0; i < numColumns; i++) {
-					if (line[i] == "W") {
-						WalkwayCell wCell = new WalkwayCell(currentRow, i);
-						cells.add(wCell);
-					} else {
-						if (line[i].length() == 1) {
+					if (line[i].length() == 1) {
+						if (line[i] == "W") {
+							WalkwayCell wCell = new WalkwayCell(currentRow, i);
+							cells.add(wCell);
+						} else {
 							char initial = line[i].charAt(0);
 							RoomCell rCell = new RoomCell(currentRow, i, initial, DoorDirection.NONE);
 							cells.add(rCell);
-						} else if (line[i].length() == 2) {
-							char initial = line[i].charAt(0);
-							char charD = line[i].charAt(1);
-							DoorDirection doorDirection = DoorDirection.NONE;
-							if (charD == 'U') {
-								doorDirection = DoorDirection.UP;
-							} else if (charD == 'D') {
-								doorDirection = DoorDirection.DOWN;
-							} else if (charD == 'L') {
-								doorDirection = DoorDirection.LEFT;
-							} else if (charD == 'R') {
-								doorDirection = DoorDirection.RIGHT;
-							}
-							RoomCell rCell = new RoomCell(currentRow, i, initial, doorDirection);
-							cells.add(rCell);
 						}
+					} else {
+						char initial = line[i].charAt(0);
+						char charD = line[i].charAt(1);
+						DoorDirection doorDirection = DoorDirection.NONE;
+						if (charD == 'U') {
+							doorDirection = DoorDirection.UP;
+						} else if (charD == 'D') {
+							doorDirection = DoorDirection.DOWN;
+						} else if (charD == 'L') {
+							doorDirection = DoorDirection.LEFT;
+						} else if (charD == 'R') {
+							doorDirection = DoorDirection.RIGHT;
+						}
+						RoomCell rCell = new RoomCell(currentRow, i, initial, doorDirection);
+						cells.add(rCell);
 					}
 				}
 				currentRow++;
