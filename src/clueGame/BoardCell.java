@@ -1,5 +1,7 @@
 package clueGame;
 
+import clueGame.RoomCell.DoorDirection;
+
 public abstract class BoardCell {
 	private int row, column;
 	
