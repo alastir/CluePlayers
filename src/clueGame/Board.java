@@ -26,7 +26,7 @@ public class Board {
 		this.legendConfig = legendFile;
 	}
 
-	public void loadConfigFiles() throws Exception {
+	public void loadConfigFiles() {
 		try {
 			FileReader reader = new FileReader(csvConfig);
 			Scanner in = new Scanner(reader);
