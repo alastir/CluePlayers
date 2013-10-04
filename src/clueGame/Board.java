@@ -85,9 +85,7 @@ public class Board {
 		int index = calcIndex(row, col);
 		BoardCell target = cells.get(index);
 		if (target.isRoom() == true) {
-			//TODO
-			RoomCell rTarget = new RoomCell(row, col);
-			return rTarget;
+			return (RoomCell) target;
 		} 
 		return null;
 	}
