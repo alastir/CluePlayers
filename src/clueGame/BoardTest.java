@@ -115,21 +115,24 @@ public class BoardTest {
 	public void exceptionTestBadColumns() throws Exception {
 		System.out.println("Bad columns");
 		Board b = new Board("ClueLayoutBadColumns.csv", "legend.txt");
-		b.loadConfigFiles();
+		b.loadLegend();
+		b.loadBoard();
 	}
 	
 	@Test (expected = BadConfigFormatException.class)
 	public void exceptionTestBadRoom() throws Exception {
 		System.out.println("Bad room found");
 		Board b = new Board("ClueLayoutBadRoom.csv", "legend.txt");
-		b.loadConfigFiles();
+		b.loadLegend();
+		b.loadBoard();
 	}
 	
 	@Test (expected = BadConfigFormatException.class)
 	public void exceptionTestBadRoomFormat() throws Exception {
 		System.out.println("Bad legend format");
 		Board b = new Board("ClueLayout.csv", "ClueLegendBadFormat.txt");
-		b.loadConfigFiles();
+		b.loadLegend();
+		b.loadBoard();
 	}
 
 }

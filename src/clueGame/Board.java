@@ -25,8 +25,28 @@ public class Board {
 		this.csvConfig = csvFile;
 		this.legendConfig = legendFile;
 	}
-
-	public void loadConfigFiles() {
+	
+	public void loadLegend() {
+		try {
+			FileReader reader = new FileReader(legendConfig);
+			Scanner in = new Scanner(reader);
+			String[] line;
+			while (in.hasNextLine()) {
+				line = in.nextLine().split(", ");
+				if (line.length > 2) {
+					throw new BadConfigFormatException("Bad Legend File");
+				}
+				rooms.put(line[0].charAt(0), line[1]);
+			}
+			in.close();
+		} catch (FileNotFoundException e1) {
+			System.out.println(e1);
+		} catch (BadConfigFormatException e2) {
+			System.out.println(e2);
+		}
+	}
+	
+	public void loadBoard() {
 		try {
 			FileReader reader = new FileReader(csvConfig);
 			Scanner in = new Scanner(reader);
@@ -79,24 +99,11 @@ public class Board {
 		} catch (BadConfigFormatException e2) {
 			System.out.println(e2);
 		}
-		
-		try {
-			FileReader reader = new FileReader(legendConfig);
-			Scanner in = new Scanner(reader);
-			String[] line;
-			while (in.hasNextLine()) {
-				line = in.nextLine().split(", ");
-				if (line.length > 2) {
-					throw new BadConfigFormatException("Bad Legend File");
-				}
-				rooms.put(line[0].charAt(0), line[1]);
-			}
-			in.close();
-		} catch (FileNotFoundException e1) {
-			System.out.println(e1);
-		} catch (BadConfigFormatException e2) {
-			System.out.println(e2);
-		}
+	}
+
+	public void loadConfigFiles() {
+		loadBoard();
+		loadLegend();
 	}
 	
 	public RoomCell getRoomCellAt(int row, int col) {
