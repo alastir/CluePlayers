@@ -111,20 +111,23 @@ public class BoardTest {
 		assertEquals(testBoard.calcIndex(18, 16), 448);
 	}
 	
-	@Test (expected = FileNotFoundException.class)
-	public void exceptionTestBadColumns() throws BadConfigFormatException, FileNotFoundException {
+	@Test (expected = BadConfigFormatException.class)
+	public void exceptionTestBadColumns() throws Exception {
+		System.out.println("Bad columns");
 		Board b = new Board("ClueLayoutBadColumns.csv", "legend.txt");
 		b.loadConfigFiles();
 	}
 	
-	@Test (expected = FileNotFoundException.class)
-	public void exceptionTestBadRoom() throws BadConfigFormatException, FileNotFoundException {
+	@Test (expected = BadConfigFormatException.class)
+	public void exceptionTestBadRoom() throws Exception {
+		System.out.println("Bad room found");
 		Board b = new Board("ClueLayoutBadRoom.csv", "legend.txt");
 		b.loadConfigFiles();
 	}
 	
-	@Test (expected = FileNotFoundException.class)
-	public void exceptionTestBadRoomFormat() throws BadConfigFormatException, FileNotFoundException {
+	@Test (expected = BadConfigFormatException.class)
+	public void exceptionTestBadRoomFormat() throws Exception {
+		System.out.println("Bad legend format");
 		Board b = new Board("ClueLayout.csv", "ClueLegendBadFormat.txt");
 		b.loadConfigFiles();
 	}
