@@ -10,7 +10,7 @@ public class BadConfigFormatException extends Exception {
 	
 	@Override
 	public String toString() {
-		return "Error: Check Configuration File.";
+		return "Error: Check Configuration Files";
 	}
 	
 	

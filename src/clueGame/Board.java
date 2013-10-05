@@ -26,27 +26,22 @@ public class Board {
 		this.legendConfig = legendFile;
 	}
 	
-	public void loadLegend() {
-		try {
-			FileReader reader = new FileReader(legendConfig);
-			Scanner in = new Scanner(reader);
-			String[] line;
-			while (in.hasNextLine()) {
-				line = in.nextLine().split(", ");
-				if (line.length > 2) {
-					throw new BadConfigFormatException("Bad Legend File");
-				}
-				rooms.put(line[0].charAt(0), line[1]);
+	public void loadLegend() throws Exception {
+		FileReader reader = new FileReader(legendConfig);
+		Scanner in = new Scanner(reader);
+		String[] line;
+		while (in.hasNextLine()) {
+			line = in.nextLine().split(", ");
+			if (line.length > 2) {
+				System.out.println("Here");
+				throw new BadConfigFormatException("Bad Legend File");
 			}
-			in.close();
-		} catch (FileNotFoundException e1) {
-			System.out.println(e1);
-		} catch (BadConfigFormatException e2) {
-			System.out.println(e2);
+			rooms.put(line[0].charAt(0), line[1]);
 		}
+		in.close();
 	}
 	
-	public void loadBoard() {
+	public void loadBoard() throws Exception {
 		try {
 			FileReader reader = new FileReader(csvConfig);
 			Scanner in = new Scanner(reader);
@@ -101,7 +96,7 @@ public class Board {
 		}
 	}
 
-	public void loadConfigFiles() {
+	public void loadConfigFiles() throws Exception {
 		loadBoard();
 		loadLegend();
 	}
