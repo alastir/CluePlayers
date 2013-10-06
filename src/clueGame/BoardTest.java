@@ -89,7 +89,6 @@ public class BoardTest {
 	public void testRoomInitial() {
 		assertEquals('G', testBoard.getRoomCellAt(1, 1).getInitial());
 		assertEquals('B', testBoard.getRoomCellAt(1, 7).getInitial());
-		System.out.println("Here");
 		assertEquals('R', testBoard.getRoomCellAt(3, 12).getInitial());
 		assertEquals('O', testBoard.getRoomCellAt(1, 17).getInitial());
 		assertEquals('H', testBoard.getRoomCellAt(6, 1).getInitial());

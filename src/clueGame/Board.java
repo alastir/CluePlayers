@@ -4,8 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import clueGame.RoomCell.DoorDirection;
 
@@ -14,6 +17,11 @@ public class Board {
 	private Map<Character, String> rooms = new HashMap<Character, String>();
 	private int numRows, numColumns;
 	private String csvConfig, legendConfig;
+	
+	private Map<Integer, LinkedList<Integer>> adjMatrix = new HashMap<Integer, LinkedList<Integer>>();
+	private Set<Integer> targets = new HashSet<Integer>();
+	private boolean[] visited = new boolean[16];
+	
 	
 	public Board() {
 		this.numRows = 0;
@@ -153,6 +161,20 @@ public class Board {
 
 	public int getNumColumns() {
 		return numColumns;
+	}
+	
+	public Map<Integer, LinkedList<Integer>> calcAdjacencies() {
+		return adjMatrix;
+	}
+	
+	public Set<Integer> getTargets(int location, int steps) {
+		Set<Integer> set = new HashSet<Integer>();
+		return set;
+	}
+	
+	public LinkedList<Integer> getAdjList(int index) {
+		LinkedList<Integer> list = new LinkedList<Integer>();
+		return list;
 	}
 	
 }
