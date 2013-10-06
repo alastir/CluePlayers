@@ -10,9 +10,6 @@ import java.util.Scanner;
 import clueGame.RoomCell.DoorDirection;
 
 public class Board {
-	public static int NUM_ROWS = 24;
-	public static int NUM_COLS = 24;
-	
 	private ArrayList<BoardCell> cells = new ArrayList<BoardCell>();
 	private Map<Character, String> rooms = new HashMap<Character, String>();
 	private int numRows, numColumns;
@@ -100,7 +97,7 @@ public class Board {
 		numRows = currentRow;
 		in.close();
 		
-		if (cells.size() != (NUM_ROWS * NUM_COLS)) {
+		if (cells.size() != (numRows * numColumns)) {
 			throw new BadConfigFormatException("Invalid config file- uneven rows or columns");
 		}
 	}
@@ -116,7 +113,12 @@ public class Board {
 		}
 	}
 	
-	public BoardCell getCellAt(int row, int col) {
+	public BoardCell getCellAt(int cellIndex) {
+		BoardCell target = cells.get(cellIndex);
+		return target;
+	}
+	
+	public BoardCell getBoardCellAt(int row, int col) {
 		int index = calcIndex(row, col);
 		BoardCell target = cells.get(index);
 		return target;
@@ -127,15 +129,13 @@ public class Board {
 		BoardCell target = cells.get(index);
 		if (target.isRoom() == true) {
 			return (RoomCell) target;
-		} else {
-			System.out.println("Cell at " + row + "," + col + " is not a room");
 		}
 		return null;
 	}
 	
 	public int calcIndex(int row, int col) {
 		int index = 0;
-		index = row*numRows + col;
+		index = row*numColumns + col;
 		return index;
 	}
 

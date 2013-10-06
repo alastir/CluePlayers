@@ -1,9 +1,5 @@
 package clueGame;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Scanner;
-
 public class RoomCell extends BoardCell {
 	enum DoorDirection {UP, DOWN, LEFT, RIGHT, NONE};
 	

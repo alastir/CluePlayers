@@ -2,11 +2,8 @@ package clueGame;
 
 import static org.junit.Assert.*;
 
-import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -74,13 +71,12 @@ public class BoardTest {
 	
 	@Test
 	public void numberOfDoors() {
-		System.out.println("");
 		int numDoors = 0;
 		int boardSize = testBoard.getNumColumns() * testBoard.getNumRows();
 		assertEquals(576, boardSize);
 		for (int i = 0; i < NUM_ROWS; i++) {
 			for (int j = 0; j < NUM_COLUMNS; j++) {
-				BoardCell testCell = testBoard.getCellAt(i, j);
+				BoardCell testCell = testBoard.getBoardCellAt(i, j);
 				if (testCell.isDoorway()) {
 					numDoors++;
 				}
@@ -93,6 +89,7 @@ public class BoardTest {
 	public void testRoomInitial() {
 		assertEquals('G', testBoard.getRoomCellAt(1, 1).getInitial());
 		assertEquals('B', testBoard.getRoomCellAt(1, 7).getInitial());
+		System.out.println("Here");
 		assertEquals('R', testBoard.getRoomCellAt(3, 12).getInitial());
 		assertEquals('O', testBoard.getRoomCellAt(1, 17).getInitial());
 		assertEquals('H', testBoard.getRoomCellAt(6, 1).getInitial());
@@ -105,9 +102,10 @@ public class BoardTest {
 	
 	@Test
 	public void testCalcIndex() {
-		assertEquals(testBoard.calcIndex(1,3), 27);
-		assertEquals(testBoard.calcIndex(0,0), 0);
-		assertEquals(testBoard.calcIndex(18, 16), 448);
+		assertEquals(0, testBoard.calcIndex(0,0));
+		assertEquals(NUM_COLUMNS-1, testBoard.calcIndex(0, NUM_COLUMNS-1));
+		assertEquals(552, testBoard.calcIndex(NUM_ROWS-1, 0));
+		assertEquals(575, testBoard.calcIndex(NUM_ROWS-1, NUM_COLUMNS-1));
 	}
 	
 	//Tests that having a board of incorrect size throws an exception
