@@ -113,37 +113,25 @@ public class BoardTest {
 	//Tests that having a board of incorrect size throws an exception
 	@Test (expected = BadConfigFormatException.class)
 	public void exceptionTestBadColumns() throws Exception {
-		try {
-			Board b = new Board("ClueLayoutBadColumns.csv", "legend.txt");
-			b.loadLegend();
-			b.loadBoard();
-		} catch (BadConfigFormatException e) {
-			throw e;
-		}
+		Board b = new Board("ClueLayoutBadColumns.csv", "legend.txt");
+		b.loadLegend();
+		b.loadBoard();
 	}
 	
 	//Tests that having an invalid room initial on our board throws an exception
 	@Test (expected = BadConfigFormatException.class)
 	public void exceptionTestBadRoom() throws Exception {
-		try {
-			Board b = new Board("ClueLayoutBadRoom.csv", "legend.txt");
-			b.loadLegend();
-			b.loadBoard();
-		} catch (BadConfigFormatException e) {
-			throw e;
-		}
+		Board b = new Board("ClueLayoutBadRoom.csv", "legend.txt");
+		b.loadLegend();
+		b.loadBoard();
 	}
 	
 	//Tests that our corrupted legend throws an exception
 	@Test (expected = BadConfigFormatException.class)
 	public void exceptionTestBadRoomFormat() throws Exception {
-		try {
-			Board b = new Board("ClueLayout.csv", "ClueLegendBadFormat.txt");
-			b.loadLegend();
-			b.loadBoard();
-		} catch (BadConfigFormatException e) {
-			throw e;
-		}
+		Board b = new Board("ClueLayout.csv", "ClueLegendBadFormat.txt");
+		b.loadLegend();
+		b.loadBoard();
 	}
 
 }

@@ -10,6 +10,9 @@ import java.util.Scanner;
 import clueGame.RoomCell.DoorDirection;
 
 public class Board {
+	public static int NUM_ROWS = 24;
+	public static int NUM_COLS = 24;
+	
 	private ArrayList<BoardCell> cells = new ArrayList<BoardCell>();
 	private Map<Character, String> rooms = new HashMap<Character, String>();
 	private int numRows, numColumns;
@@ -28,7 +31,7 @@ public class Board {
 		this.legendConfig = legendFile;
 	}
 	
-	public void loadLegend() throws Exception {
+	public void loadLegend() throws FileNotFoundException, BadConfigFormatException {
 		FileReader reader = new FileReader(legendConfig);
 		Scanner in = new Scanner(reader);
 		String[] line;
@@ -52,61 +55,65 @@ public class Board {
 		return valid;
 	}
 	
-	public void loadBoard() throws Exception {
-		try {
-			FileReader reader = new FileReader(csvConfig);
-			Scanner in = new Scanner(reader);
-			String[] line;
-			int currentRow = 0;
-			while (in.hasNextLine()) {
-				line = in.nextLine().split(",");
-				numColumns = line.length; //numColumns == number of cells found in one line of our board
-				for (int i = 0; i < numColumns; i++) {
-					if (line[i].length() == 1) { //If cell contains only one initial
-						char initial = line[i].charAt(0);
-						if (initial == 'W') {
-							WalkwayCell wCell = new WalkwayCell(currentRow, i);
-							cells.add(wCell);
-						} else {
-							if (validRoom(initial) == false) {
-								throw new BadConfigFormatException("Invalid room initial found");
-							}
-							RoomCell rCell = new RoomCell(currentRow, i, initial, DoorDirection.NONE);
-							cells.add(rCell);
-						}
-					} else if (line[i].length() == 2) { //If ceel contains two initials (it must be a door!)
-						char initial = line[i].charAt(0);
-						char charD = line[i].charAt(1);
-						DoorDirection doorDirection = DoorDirection.NONE;
-						if (charD == 'U') {
-							doorDirection = DoorDirection.UP;
-						} else if (charD == 'D') {
-							doorDirection = DoorDirection.DOWN;
-						} else if (charD == 'L') {
-							doorDirection = DoorDirection.LEFT;
-						} else if (charD == 'R') {
-							doorDirection = DoorDirection.RIGHT;
-						}
-						RoomCell rCell = new RoomCell(currentRow, i, initial, doorDirection);
-						cells.add(rCell);
+	public void loadBoard() throws FileNotFoundException, BadConfigFormatException {
+		FileReader reader = new FileReader(csvConfig);
+		Scanner in = new Scanner(reader);
+		String[] line;
+		int currentRow = 0;
+		while (in.hasNextLine()) {
+			line = in.nextLine().split(",");
+			numColumns = line.length; //numColumns == number of cells found in one line of our board
+			for (int i = 0; i < numColumns; i++) {
+				if (line[i].length() == 1) { //If cell contains only one initial
+					char initial = line[i].charAt(0);
+					if (initial == 'W') {
+						WalkwayCell wCell = new WalkwayCell(currentRow, i);
+						cells.add(wCell);
 					} else {
-						throw new BadConfigFormatException("Invalid room initials (too many)");
+						if (validRoom(initial) == false) {
+							throw new BadConfigFormatException("Invalid room initial found");
+						}
+						RoomCell rCell = new RoomCell(currentRow, i, initial, DoorDirection.NONE);
+						cells.add(rCell);
 					}
+				} else if (line[i].length() == 2) { //If cell contains two initials (it must be a door!)
+					char initial = line[i].charAt(0);
+					char charD = line[i].charAt(1);
+					DoorDirection doorDirection = DoorDirection.NONE;
+					if (charD == 'U') {
+						doorDirection = DoorDirection.UP;
+					} else if (charD == 'D') {
+						doorDirection = DoorDirection.DOWN;
+					} else if (charD == 'L') {
+						doorDirection = DoorDirection.LEFT;
+					} else if (charD == 'R') {
+						doorDirection = DoorDirection.RIGHT;
+					}
+					RoomCell rCell = new RoomCell(currentRow, i, initial, doorDirection);
+					cells.add(rCell);
+				} else {
+					throw new BadConfigFormatException("Invalid room initials- too many characters present");
 				}
-				currentRow++;
 			}
-			numRows = currentRow;
-			in.close();
+			currentRow++;
+		}
+		numRows = currentRow;
+		in.close();
+		
+		if (cells.size() != (NUM_ROWS * NUM_COLS)) {
+			throw new BadConfigFormatException("Invalid config file- uneven rows or columns");
+		}
+	}
+
+	public void loadConfigFiles() throws FileNotFoundException, BadConfigFormatException {
+		try {
+			loadBoard();
+			loadLegend();
 		} catch (FileNotFoundException e1) {
 			System.out.println(e1);
 		} catch (BadConfigFormatException e2) {
 			System.out.println(e2);
 		}
-	}
-
-	public void loadConfigFiles() throws Exception {
-		loadBoard();
-		loadLegend();
 	}
 	
 	public BoardCell getCellAt(int row, int col) {
