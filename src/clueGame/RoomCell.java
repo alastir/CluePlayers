@@ -25,10 +25,11 @@ public class RoomCell extends BoardCell {
 	}
 	
 	public boolean isDoorway() {
-		if (doorDirection != DoorDirection.NONE)
+		if (doorDirection != DoorDirection.NONE) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 	
 	public DoorDirection getDoorDirection() {

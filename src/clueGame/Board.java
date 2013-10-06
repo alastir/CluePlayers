@@ -22,6 +22,8 @@ public class Board {
 	
 	public Board(String csvFile, String legendFile) {
 		super();
+		this.numRows = 0;
+		this.numColumns = 0;
 		this.csvConfig = csvFile;
 		this.legendConfig = legendFile;
 	}
@@ -33,12 +35,21 @@ public class Board {
 		while (in.hasNextLine()) {
 			line = in.nextLine().split(", ");
 			if (line.length > 2) {
-				System.out.println("Here");
 				throw new BadConfigFormatException("Bad Legend File");
 			}
 			rooms.put(line[0].charAt(0), line[1]);
 		}
 		in.close();
+	}
+	
+	public boolean validRoom(char initial) {
+		boolean valid = false;
+		for (char roomInitials : rooms.keySet()) {
+			if (initial == roomInitials) {
+				valid = true;
+			}
+		}
+		return valid;
 	}
 	
 	public void loadBoard() throws Exception {
@@ -49,24 +60,21 @@ public class Board {
 			int currentRow = 0;
 			while (in.hasNextLine()) {
 				line = in.nextLine().split(",");
-				numColumns = line.length;
+				numColumns = line.length; //numColumns == number of cells found in one line of our board
 				for (int i = 0; i < numColumns; i++) {
-					if (line[i].length() == 1) {
-						if (line[i] == "W") {
+					if (line[i].length() == 1) { //If cell contains only one initial
+						char initial = line[i].charAt(0);
+						if (initial == 'W') {
 							WalkwayCell wCell = new WalkwayCell(currentRow, i);
 							cells.add(wCell);
 						} else {
-							char initial = line[i].charAt(0);
-							for (char roomK : rooms.keySet()) {
-								if (initial == roomK)
-									continue;
-								else
-									throw new BadConfigFormatException("Invalid Room");
+							if (validRoom(initial) == false) {
+								throw new BadConfigFormatException("Invalid room initial found");
 							}
 							RoomCell rCell = new RoomCell(currentRow, i, initial, DoorDirection.NONE);
 							cells.add(rCell);
 						}
-					} else if (line[i].length() == 2) {
+					} else if (line[i].length() == 2) { //If ceel contains two initials (it must be a door!)
 						char initial = line[i].charAt(0);
 						char charD = line[i].charAt(1);
 						DoorDirection doorDirection = DoorDirection.NONE;
@@ -82,7 +90,7 @@ public class Board {
 						RoomCell rCell = new RoomCell(currentRow, i, initial, doorDirection);
 						cells.add(rCell);
 					} else {
-						throw new BadConfigFormatException("Too long of room string");
+						throw new BadConfigFormatException("Invalid room initials (too many)");
 					}
 				}
 				currentRow++;
@@ -101,12 +109,20 @@ public class Board {
 		loadLegend();
 	}
 	
+	public BoardCell getCellAt(int row, int col) {
+		int index = calcIndex(row, col);
+		BoardCell target = cells.get(index);
+		return target;
+	}
+	
 	public RoomCell getRoomCellAt(int row, int col) {
 		int index = calcIndex(row, col);
 		BoardCell target = cells.get(index);
 		if (target.isRoom() == true) {
 			return (RoomCell) target;
-		} 
+		} else {
+			System.out.println("Cell at " + row + "," + col + " is not a room");
+		}
 		return null;
 	}
 	

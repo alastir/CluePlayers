@@ -19,7 +19,8 @@ public class BoardTest {
 	@BeforeClass
 	public static void init() throws Exception {
 		testBoard = new Board("ClueLayout.csv", "legend.txt");
-		testBoard.loadConfigFiles();
+		testBoard.loadLegend();
+		testBoard.loadBoard();
 	}
 
 	@Test
@@ -40,12 +41,12 @@ public class BoardTest {
 	
 	@Test
 	public void correctRows() {
-		assertEquals(testBoard.getNumRows(), NUM_ROWS);
+		assertEquals(NUM_ROWS, testBoard.getNumRows());
 	}
 	
 	@Test
 	public void correctColumns() {
-		assertEquals(testBoard.getNumColumns(), NUM_COLUMNS);
+		assertEquals(NUM_COLUMNS, testBoard.getNumColumns());
 	}
 	
 	@Test
@@ -62,29 +63,27 @@ public class BoardTest {
 		assertTrue(testRoom.isDoorway());
 		assertEquals(RoomCell.DoorDirection.LEFT, testRoom.getDoorDirection());
 		
+		
 		testRoom = testBoard.getRoomCellAt(3, 14);
 		assertTrue(testRoom.isDoorway());
 		assertEquals(RoomCell.DoorDirection.RIGHT, testRoom.getDoorDirection());
-		
-		testRoom = testBoard.getRoomCellAt(0, 0);
-		assertFalse(testRoom.isDoorway());
-		
+
 		testRoom = testBoard.getRoomCellAt(1, 1);
 		assertFalse(testRoom.isDoorway());
 	}
 	
 	@Test
 	public void numberOfDoors() {
+		System.out.println("");
 		int numDoors = 0;
 		int boardSize = testBoard.getNumColumns() * testBoard.getNumRows();
 		assertEquals(576, boardSize);
 		for (int i = 0; i < NUM_ROWS; i++) {
 			for (int j = 0; j < NUM_COLUMNS; j++) {
-				BoardCell testCell = testBoard.getRoomCellAt(i, j);
+				BoardCell testCell = testBoard.getCellAt(i, j);
 				if (testCell.isDoorway()) {
 					numDoors++;
 				}
-					
 			}
 		}
 		assertEquals(10, numDoors);
@@ -114,25 +113,25 @@ public class BoardTest {
 	//Tests that having a board of incorrect size throws an exception
 	@Test (expected = BadConfigFormatException.class)
 	public void exceptionTestBadColumns() throws Exception {
-		System.out.println("Bad columns");
-		Board b = new Board("ClueLayoutBadColumns.csv", "legend.txt");
-		System.out.println("Legend causing error");
-		b.loadLegend();
-		System.out.println("Board causing error");
-		b.loadBoard();
-		System.out.println("");
+		try {
+			Board b = new Board("ClueLayoutBadColumns.csv", "legend.txt");
+			b.loadLegend();
+			b.loadBoard();
+		} catch (BadConfigFormatException e) {
+			throw e;
+		}
 	}
 	
 	//Tests that having an invalid room initial on our board throws an exception
 	@Test (expected = BadConfigFormatException.class)
 	public void exceptionTestBadRoom() throws Exception {
-		System.out.println("Bad room found");
-		Board b = new Board("ClueLayoutBadRoom.csv", "legend.txt");
-		System.out.println("Legend causing error");
-		b.loadLegend();
-		System.out.println("Board causing error");
-		b.loadBoard();
-		System.out.println("");
+		try {
+			Board b = new Board("ClueLayoutBadRoom.csv", "legend.txt");
+			b.loadLegend();
+			b.loadBoard();
+		} catch (BadConfigFormatException e) {
+			throw e;
+		}
 	}
 	
 	//Tests that our corrupted legend throws an exception

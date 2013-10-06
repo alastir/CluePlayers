@@ -10,4 +10,8 @@ public class WalkwayCell extends BoardCell {
 		return true;
 	}
 	
+	public boolean isRoom() {
+		return false;
+	}
+	
 }
