@@ -77,18 +77,16 @@ public class TargetTests {
 		testList = testBoard.getAdjList(location);
 		assertTrue(testList.contains(up));
 		assertTrue(testList.contains(down));
-		assertTrue(testList.contains(left));
-		assertEquals(3, testList.size());
+		assertEquals(2, testList.size());
 		
 		location = testBoard.calcIndex(23, 12);
 		up = testBoard.calcIndex(22, 12);
 		left = testBoard.calcIndex(23, 11);
 		right = testBoard.calcIndex(23, 13);
 		testList = testBoard.getAdjList(location);
-		assertTrue(testList.contains(up));
 		assertTrue(testList.contains(left));
 		assertTrue(testList.contains(right));
-		assertEquals(3, testList.size());
+		assertEquals(2, testList.size());
 		
 		location = testBoard.calcIndex(10, 0);
 		up = testBoard.calcIndex(9, 0);
@@ -97,8 +95,7 @@ public class TargetTests {
 		testList = testBoard.getAdjList(location);
 		assertTrue(testList.contains(up));
 		assertTrue(testList.contains(down));
-		assertTrue(testList.contains(right));
-		assertEquals(3, testList.size());
+		assertEquals(2, testList.size());
 	}
 	
 	//Green: Locations that are beside a room cell that is not a doorway
@@ -114,7 +111,7 @@ public class TargetTests {
 		LinkedList<Integer> testList = testBoard.getAdjList(location);
 		assertTrue(testList.contains(up));
 		assertTrue(testList.contains(down));
-		assertTrue(testList.contains(left));
+		assertFalse(testList.contains(left));
 		assertTrue(testList.contains(right));
 		assertEquals(3, testList.size());
 		
@@ -126,7 +123,7 @@ public class TargetTests {
 		testList = testBoard.getAdjList(location);
 		assertTrue(testList.contains(up));
 		assertTrue(testList.contains(down));
-		assertTrue(testList.contains(left));
+		assertFalse(testList.contains(left));
 		assertTrue(testList.contains(right));
 		assertEquals(3, testList.size());
 	}
@@ -142,11 +139,11 @@ public class TargetTests {
 		int left = testBoard.calcIndex(3, 6);
 		int right = testBoard.calcIndex(3, 8);
 		LinkedList<Integer> testList = testBoard.getAdjList(location);
-		assertTrue(testList.contains(up));
+		assertFalse(testList.contains(up));
 		assertTrue(testList.contains(down));
 		assertTrue(testList.contains(left));
-		assertTrue(testList.contains(right));
-		assertEquals(3, testList.size());
+		assertFalse(testList.contains(right));
+		assertEquals(2, testList.size());
 		
 		location = testBoard.calcIndex(5, 2);
 		up = testBoard.calcIndex(4, 2);
@@ -155,7 +152,7 @@ public class TargetTests {
 		right = testBoard.calcIndex(5, 3);
 		testList = testBoard.getAdjList(location);
 		assertTrue(testList.contains(up));
-		assertTrue(testList.contains(down));
+		assertFalse(testList.contains(down));
 		assertTrue(testList.contains(left));
 		assertTrue(testList.contains(right));
 		assertEquals(3, testList.size());
@@ -172,11 +169,11 @@ public class TargetTests {
 		int left = testBoard.calcIndex(2, 6);
 		int right = testBoard.calcIndex(2, 8);
 		LinkedList<Integer> testList = testBoard.getAdjList(location);
-		assertTrue(testList.contains(up));
+		assertFalse(testList.contains(up));
 		assertTrue(testList.contains(down));
 		assertTrue(testList.contains(left));
-		assertTrue(testList.contains(right));
-		assertEquals(3, testList.size());
+		assertFalse(testList.contains(right));
+		assertEquals(2, testList.size());
 		
 		location = testBoard.calcIndex(4, 2);
 		up = testBoard.calcIndex(3, 2);
@@ -184,11 +181,11 @@ public class TargetTests {
 		left = testBoard.calcIndex(4, 1);
 		right = testBoard.calcIndex(4, 3);
 		testList = testBoard.getAdjList(location);
-		assertTrue(testList.contains(up));
+		assertFalse(testList.contains(up));
 		assertTrue(testList.contains(down));
-		assertTrue(testList.contains(left));
-		assertTrue(testList.contains(right));
-		assertEquals(3, testList.size());
+		assertFalse(testList.contains(left));
+		assertFalse(testList.contains(right));
+		assertEquals(1, testList.size());
 	}
 	
 	//TARGET TESTS FOR.................................................................
@@ -196,6 +193,7 @@ public class TargetTests {
 	//Pink: Targets along walkways at various distances
 	@Test
 	public void testTargetAlongWalkway() {
+		testBoard.calcAdjacencies();
 		int location = testBoard.calcIndex(0, 16);
 		Set<Integer> targets = testBoard.getTargets(location, 2);
 		

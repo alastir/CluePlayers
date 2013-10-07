@@ -15,12 +15,12 @@ import clueGame.RoomCell.DoorDirection;
 public class Board {
 	private ArrayList<BoardCell> cells = new ArrayList<BoardCell>();
 	private Map<Character, String> rooms = new HashMap<Character, String>();
-	private int numRows, numColumns;
+	private int numRows, numColumns, boardSize;
 	private String csvConfig, legendConfig;
 	
 	private Map<Integer, LinkedList<Integer>> adjMatrix = new HashMap<Integer, LinkedList<Integer>>();
 	private Set<Integer> targets = new HashSet<Integer>();
-	private boolean[] visited = new boolean[16];
+	private boolean[] visited = new boolean[576];
 	
 	
 	public Board() {
@@ -104,6 +104,7 @@ public class Board {
 		}
 		numRows = currentRow;
 		in.close();
+		boardSize = numRows * numColumns;
 		
 		if (cells.size() != (numRows * numColumns)) {
 			throw new BadConfigFormatException("Invalid config file- uneven rows or columns");
@@ -146,6 +147,17 @@ public class Board {
 		index = row*numColumns + col;
 		return index;
 	}
+	
+	public int[] calcRowandColumn(int index) {
+		int row = 0;
+		int col = 0;
+		row = index % numRows;
+		col = index - (index % numRows);
+		int[] result = new int[2];
+		result[0] = row;
+		result[1] = col;
+		return result;
+	}
 
 	public ArrayList<BoardCell> getCells() {
 		return cells;
@@ -163,18 +175,114 @@ public class Board {
 		return numColumns;
 	}
 	
+	public char cellRelation(int startR, int startC, int row, int col) {
+		char adjCellToThe = 'N';
+		if ((row == startR - 1) && (col == startC))
+			adjCellToThe = 'U';
+		else if ((row == startR + 1) && (col == startC))
+			adjCellToThe = 'D';
+		else if ((row == startR) && (col == startC + 1))
+			adjCellToThe = 'R';
+		else if ((row == startR) && (col == startC - 1))
+			adjCellToThe = 'L';
+		return adjCellToThe;
+			
+	}
+	
+	public LinkedList<Integer> addValid(LinkedList<Integer> adjList, int startR, int startC, int row, int col) {
+		BoardCell cell = getBoardCellAt(row, col);
+		if (cell.isWalkway()) {
+			adjList.add(calcIndex(row, col));
+		} else if (cell.isRoom()) {
+			RoomCell rCell = (RoomCell) cell;
+			char adjCellToThe = cellRelation(startR, startC, row, col);
+			if ((adjCellToThe == 'U') && (rCell.doorDirection == DoorDirection.DOWN))
+				adjList.add(calcIndex(row, col));
+			else if ((adjCellToThe == 'D') && (rCell.doorDirection == DoorDirection.UP))
+				adjList.add(calcIndex(row, col));
+			else if ((adjCellToThe == 'R') && (rCell.doorDirection == DoorDirection.LEFT))
+				adjList.add(calcIndex(row, col));
+			else if ((adjCellToThe == 'L') && (rCell.doorDirection == DoorDirection.RIGHT))
+				adjList.add(calcIndex(row, col));
+		}
+		return adjList;
+	}
+	
 	public Map<Integer, LinkedList<Integer>> calcAdjacencies() {
+		for (int row = 0; row < numRows; row++) {
+			for (int col = 0; col < numColumns; col++){
+				LinkedList<Integer> adjList = new LinkedList<Integer>();
+				if (row == 0) {
+					if (col == 0) {
+						adjList = addValid(adjList, row, col, row + 1, col);
+						adjList = addValid(adjList, row, col, row, col + 1);
+					} else if (col == 23) {
+						adjList = addValid(adjList, row, col, row + 1, col);
+						adjList = addValid(adjList, row, col, row, col - 1);
+					} else {
+						adjList = addValid(adjList, row, col, row + 1, col);
+						adjList = addValid(adjList, row, col, row, col + 1);
+						adjList = addValid(adjList, row, col, row, col - 1);
+					}	
+				} else if (row == 23) {
+					if (col == 0) {
+						adjList = addValid(adjList, row, col, row - 1, col);
+						adjList = addValid(adjList, row, col, row, col - 1);
+					} else if (col == 23) {
+						adjList = addValid(adjList, row, col, row - 1, col);
+						adjList = addValid(adjList, row, col, row, col - 1);
+					} else {
+						adjList = addValid(adjList, row, col, row - 1, col);
+						adjList = addValid(adjList, row, col, row, col + 1);
+						adjList = addValid(adjList, row, col, row, col - 1);
+					}
+				} else if (col == 0) {
+					adjList = addValid(adjList, row, col, row + 1, col);
+					adjList = addValid(adjList, row, col, row - 1, col);
+					adjList = addValid(adjList, row, col, row, col + 1);
+				} else if (col == 23) {
+					adjList = addValid(adjList, row, col, row + 1, col);
+					adjList = addValid(adjList, row, col, row - 1, col);
+					adjList = addValid(adjList, row, col, row, col - 1);
+				} else {
+					adjList = addValid(adjList, row, col, row + 1, col);
+					adjList = addValid(adjList, row, col, row - 1, col);
+					adjList = addValid(adjList, row, col, row, col + 1);
+					adjList = addValid(adjList, row, col, row, col - 1);
+				}
+				adjMatrix.put(calcIndex(row, col), adjList);
+			}
+		}
 		return adjMatrix;
 	}
 	
 	public Set<Integer> getTargets(int location, int steps) {
-		Set<Integer> set = new HashSet<Integer>();
-		return set;
+		//Set<Integer> set = new HashSet<Integer>();
+		LinkedList<Integer> adjCells = new LinkedList<Integer>();
+		LinkedList<Integer> temp = getAdjList(location);
+		for (int value : temp) {
+			if (!visited[value])
+				adjCells.add(value);
+		}
+		//System.out.println("AdjList for " + thisCell + ": " + adjCells);
+		for (int adjCell : adjCells) {
+			visited[adjCell] = true;
+			//System.out.println("Num steps: " + numSteps);
+			if (steps == 1) {
+				targets.add(adjCell);
+				//System.out.println("Added " + adjCell + " to targets.");
+			}
+			else
+				getTargets(adjCell, (steps-1));
+			visited[adjCell] = false;
+		}
+		//System.out.println("Targets for " + thisCell + " taking " + numSteps + " steps: " + targets);
+		return targets;
+		//return set;
 	}
 	
 	public LinkedList<Integer> getAdjList(int index) {
-		LinkedList<Integer> list = new LinkedList<Integer>();
-		return list;
+		return adjMatrix.get(index);
 	}
 	
 }
