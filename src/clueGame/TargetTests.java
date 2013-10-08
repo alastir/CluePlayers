@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.LinkedList;
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -16,8 +17,8 @@ public class TargetTests {
 	public static final int NUM_COLUMNS = 24;
 	public static final int NUM_ROWS = 24;
 	
-	@BeforeClass
-	public static void init() throws Exception {
+	@Before
+	public void init() throws Exception {
 		testBoard = new Board("ClueLayout.csv", "legend.txt");
 		testBoard.loadLegend();
 		testBoard.loadBoard();
@@ -192,29 +193,31 @@ public class TargetTests {
 	
 	//Pink: Targets along walkways at various distances
 	@Test
-	public void testTargetAlongWalkway() {
-		testBoard.calcAdjacencies();
+	public void testTargetAlongWalkway_1() {
 		int location = testBoard.calcIndex(0, 16);
-		Set<Integer> targets = testBoard.getTargets(location, 2);
-		
+		Set<Integer> targets1 = testBoard.getTargets(location, 2);
+
 		int a = testBoard.calcIndex(0, 14);
 		int b = testBoard.calcIndex(0, 18);
 		int c = testBoard.calcIndex(1, 15);
 		int d = testBoard.calcIndex(2, 16);
-		
-		assertEquals(4, targets.size());
-		assertTrue(targets.contains(a));
-		assertTrue(targets.contains(b));
-		assertTrue(targets.contains(c));
-		assertTrue(targets.contains(d));
-		//----------------------------------------------
-		location = testBoard.calcIndex(10, 7);
-		targets = testBoard.getTargets(location, 3);
-		
-		a =  testBoard.calcIndex(7, 7);
-		b =  testBoard.calcIndex(8, 6);
-		c =  testBoard.calcIndex(8, 8);
-		d =  testBoard.calcIndex(9, 7);
+
+		assertEquals(4, targets1.size());
+		assertTrue(targets1.contains(a));
+		assertTrue(targets1.contains(b));
+		assertTrue(targets1.contains(c));
+		assertTrue(targets1.contains(d));
+	}
+	
+	@Test
+	public void testTargetAlongWalkway_2() {
+		int location = testBoard.calcIndex(10, 7);
+		Set<Integer> targets2 = testBoard.getTargets(location, 3);
+
+		int a =  testBoard.calcIndex(7, 7);
+		int b =  testBoard.calcIndex(8, 6);
+		int c =  testBoard.calcIndex(8, 8);
+		int d =  testBoard.calcIndex(9, 7);
 		int e =  testBoard.calcIndex(9, 9);
 		int f =  testBoard.calcIndex(10, 6);
 		int g =  testBoard.calcIndex(10, 8);
@@ -224,72 +227,78 @@ public class TargetTests {
 		int k =  testBoard.calcIndex(12, 6);
 		int l =  testBoard.calcIndex(12, 8);
 		int m = testBoard.calcIndex(13, 7);
-		
-		assertEquals(13, targets.size());
-		assertTrue(targets.contains(a));
-		assertTrue(targets.contains(b));
-		assertTrue(targets.contains(c));
-		assertTrue(targets.contains(d));
-		assertTrue(targets.contains(e));
-		assertTrue(targets.contains(f));
-		assertTrue(targets.contains(g));
-		assertTrue(targets.contains(h));
-		assertTrue(targets.contains(i));
-		assertTrue(targets.contains(j));
-		assertTrue(targets.contains(k));
-		assertTrue(targets.contains(l));
-		assertTrue(targets.contains(m));
-		//----------------------------------------------
-		location = testBoard.calcIndex(8, 20);
-		targets = testBoard.getTargets(location, 4);
-		
-		a =  testBoard.calcIndex(7, 23);
-		b =  testBoard.calcIndex(8, 16);
-		c =  testBoard.calcIndex(9, 23);
-		
-		assertEquals(3, targets.size());
-		assertTrue(targets.contains(a));
-		assertTrue(targets.contains(b));
-		assertTrue(targets.contains(c));
-		//----------------------------------------------
-		location = testBoard.calcIndex(18, 8);
-		targets = testBoard.getTargets(location, 5);
-		
-		a =  testBoard.calcIndex(13, 8);
-		b =  testBoard.calcIndex(14, 7);
-		c =  testBoard.calcIndex(14, 9);
-		d =  testBoard.calcIndex(15, 6);
-		e =  testBoard.calcIndex(15, 8);
-		f =  testBoard.calcIndex(15, 10);
-		g =  testBoard.calcIndex(16, 5);
-		h =  testBoard.calcIndex(16, 7);
-		i =  testBoard.calcIndex(16, 9);
-		j =  testBoard.calcIndex(16, 11);
-		k =  testBoard.calcIndex(22, 7);
-		l =  testBoard.calcIndex(22, 9);
-		m = testBoard.calcIndex(23, 8);
-		
-		assertEquals(13, targets.size());
-		assertTrue(targets.contains(a));
-		assertTrue(targets.contains(b));
-		assertTrue(targets.contains(c));
-		assertTrue(targets.contains(d));
-		assertTrue(targets.contains(e));
-		assertTrue(targets.contains(f));
-		assertTrue(targets.contains(g));
-		assertTrue(targets.contains(h));
-		assertTrue(targets.contains(i));
-		assertTrue(targets.contains(j));
-		assertTrue(targets.contains(k));
-		assertTrue(targets.contains(l));
-		assertTrue(targets.contains(m));
+
+		assertEquals(8, targets2.size());
+		assertTrue(targets2.contains(a));
+		assertTrue(targets2.contains(b));
+		assertTrue(targets2.contains(c));
+		assertTrue(targets2.contains(d));
+		assertFalse(targets2.contains(e));
+		assertTrue(targets2.contains(f));
+		assertFalse(targets2.contains(g));
+		assertFalse(targets2.contains(h));
+		assertTrue(targets2.contains(i));
+		assertFalse(targets2.contains(j));
+		assertTrue(targets2.contains(k));
+		assertFalse(targets2.contains(l));
+		assertTrue(targets2.contains(m));
+	}
+
+	@Test
+	public void testTargetAlongWalkway_3() {
+		int location = testBoard.calcIndex(8, 20);
+		Set<Integer> targets3 = testBoard.getTargets(location, 4);
+
+		int a =  testBoard.calcIndex(7, 23);
+		int b =  testBoard.calcIndex(8, 16);
+		int c =  testBoard.calcIndex(9, 23);
+
+		assertEquals(3, targets3.size());
+		assertTrue(targets3.contains(a));
+		assertTrue(targets3.contains(b));
+		assertTrue(targets3.contains(c));
+	}
+	
+	@Test
+	public void testTargetAlongWalkway_4() {
+		int location = testBoard.calcIndex(18, 8);
+		Set<Integer> targets4 = testBoard.getTargets(location, 5);
+
+		int a =  testBoard.calcIndex(13, 8);
+		int b =  testBoard.calcIndex(14, 7);
+		int c =  testBoard.calcIndex(14, 9);
+		int d =  testBoard.calcIndex(15, 6);
+		int e =  testBoard.calcIndex(15, 8);
+		int f =  testBoard.calcIndex(15, 10);
+		int g =  testBoard.calcIndex(16, 5);
+		int h =  testBoard.calcIndex(16, 7);
+		int i =  testBoard.calcIndex(16, 9);
+		int j =  testBoard.calcIndex(16, 11);
+		int k =  testBoard.calcIndex(22, 7);
+		int l =  testBoard.calcIndex(22, 9);
+		int m = testBoard.calcIndex(23, 8);
+
+		assertEquals(11, targets4.size());
+		assertFalse(targets4.contains(a));
+		assertTrue(targets4.contains(b));
+		assertFalse(targets4.contains(c));
+		assertTrue(targets4.contains(d));
+		assertTrue(targets4.contains(e));
+		assertTrue(targets4.contains(f));
+		assertTrue(targets4.contains(g));
+		assertTrue(targets4.contains(h));
+		assertTrue(targets4.contains(i));
+		assertTrue(targets4.contains(j));
+		assertTrue(targets4.contains(k));
+		assertTrue(targets4.contains(l));
+		assertTrue(targets4.contains(m));
 	}
 	
 	//White: Targets that allow the user to enter a room
 	@Test
-	public void testTargetEnterRoom() {
+	public void testTargetEnterRoom_1() {
 		int location = testBoard.calcIndex(3, 15);
-		Set<Integer> targets = testBoard.getTargets(location, 2);
+		Set<Integer> targets1 = testBoard.getTargets(location, 2);
 		
 		int a = testBoard.calcIndex(1, 15);
 		int b = testBoard.calcIndex(2, 14);
@@ -298,52 +307,61 @@ public class TargetTests {
 		int e = testBoard.calcIndex(3, 17);
 		int f = testBoard.calcIndex(4, 16);
 		
-		assertEquals(6, targets.size());
-		assertTrue(targets.contains(a));
-		assertTrue(targets.contains(b));
-		assertTrue(targets.contains(c));
-		assertTrue(targets.contains(d));
-		assertTrue(targets.contains(e));
-		assertTrue(targets.contains(f));
-		//----------------------------------------------
-		location = testBoard.calcIndex(8, 18);
-		targets = testBoard.getTargets(location, 3);
-		
-		a = testBoard.calcIndex(7, 16);
-		b = testBoard.calcIndex(8, 15);
-		c = testBoard.calcIndex(9, 16);
-		d = testBoard.calcIndex(9, 18);
-		e = testBoard.calcIndex(8, 21);
-		
-		assertEquals(5, targets.size());
-		assertTrue(targets.contains(a));
-		assertTrue(targets.contains(b));
-		assertTrue(targets.contains(c));
-		assertTrue(targets.contains(d));
-		assertTrue(targets.contains(e));
+		System.out.println("Enter 1: " + targets1);
+		assertEquals(7, targets1.size()); //6 because not expecting d
+		assertTrue(targets1.contains(a));
+		assertTrue(targets1.contains(b));
+		assertTrue(targets1.contains(c));
+		assertTrue(targets1.contains(d)); //Fails here on entering room to immediate left
+		assertTrue(targets1.contains(e));
+		assertTrue(targets1.contains(f));
 	}
 	
-	
+	@Test
+	public void testTargetEnterRoom_2() {
+		int location = testBoard.calcIndex(8, 18);
+		Set<Integer> targets2 = testBoard.getTargets(location, 3);
+
+		int a = testBoard.calcIndex(7, 16);
+		int b = testBoard.calcIndex(8, 15);
+		int c = testBoard.calcIndex(9, 16);
+		int d = testBoard.calcIndex(9, 18);
+		int e = testBoard.calcIndex(8, 21);
+
+		System.out.println("Enter 2: " + targets2);
+		assertEquals(5, targets2.size()); //Expecting 4 because d is not included 
+		assertTrue(targets2.contains(a));
+		assertTrue(targets2.contains(b));
+		assertTrue(targets2.contains(c));
+		assertTrue(targets2.contains(d)); //Fails here on entering door immediately down
+		assertTrue(targets2.contains(e));
+	}
+
 	//Turquoise: Targets calculated when leaving a room
 	@Test
-	public void testTargetLeavingRoom() {
+	public void testTargetLeavingRoom_1() {
 		int location = testBoard.calcIndex(17, 20);
 		Set<Integer> targets = testBoard.getTargets(location, 3);
-		
+
 		int a = testBoard.calcIndex(16, 18);
 		int b = testBoard.calcIndex(16, 22);
-	
+
 		assertEquals(2, targets.size());
 		assertTrue(targets.contains(a));
 		assertTrue(targets.contains(b));
-		//----------------------------------------------
-		location = testBoard.calcIndex(19, 15);
-		targets = testBoard.getTargets(location, 2);
-		
-		a = testBoard.calcIndex(20, 14);
-		b = testBoard.calcIndex(20, 16);
+		//Failing because the game isn't forcing you to exit the room from the doorway!
+	}
+
+	@Test
+	public void testTargetLeavingRoom_2() {
+		int location = testBoard.calcIndex(19, 15);
+		Set<Integer> targets = testBoard.getTargets(location, 2);
+
+		int a = testBoard.calcIndex(20, 14);
+		int b = testBoard.calcIndex(20, 16);
 		int c = testBoard.calcIndex(21, 15);
-		
+
+		System.out.println("Leaving 2: " + targets);
 		assertEquals(3, targets.size());
 		assertTrue(targets.contains(a));
 		assertTrue(targets.contains(b));

@@ -195,15 +195,18 @@ public class Board {
 			adjList.add(calcIndex(row, col));
 		} else if (cell.isRoom()) {
 			RoomCell rCell = (RoomCell) cell;
-			char adjCellToThe = cellRelation(startR, startC, row, col);
-			if ((adjCellToThe == 'U') && (rCell.doorDirection == DoorDirection.DOWN))
-				adjList.add(calcIndex(row, col));
-			else if ((adjCellToThe == 'D') && (rCell.doorDirection == DoorDirection.UP))
-				adjList.add(calcIndex(row, col));
-			else if ((adjCellToThe == 'R') && (rCell.doorDirection == DoorDirection.LEFT))
-				adjList.add(calcIndex(row, col));
-			else if ((adjCellToThe == 'L') && (rCell.doorDirection == DoorDirection.RIGHT))
-				adjList.add(calcIndex(row, col));
+		
+			if (cell.isDoorway()) {
+				char adjCellToThe = cellRelation(startR, startC, row, col);
+				if ((adjCellToThe == 'U') && (rCell.doorDirection == DoorDirection.DOWN))
+					adjList.add(calcIndex(row, col));
+				else if ((adjCellToThe == 'D') && (rCell.doorDirection == DoorDirection.UP))
+					adjList.add(calcIndex(row, col));
+				else if ((adjCellToThe == 'R') && (rCell.doorDirection == DoorDirection.LEFT))
+					adjList.add(calcIndex(row, col));
+				else if ((adjCellToThe == 'L') && (rCell.doorDirection == DoorDirection.RIGHT))
+					adjList.add(calcIndex(row, col));
+			}
 		}
 		return adjList;
 	}
@@ -256,10 +259,22 @@ public class Board {
 		return adjMatrix;
 	}
 	
-	public Set<Integer> getTargets(int location, int steps) {
-		//Set<Integer> set = new HashSet<Integer>();
+	public void startTargets(int location, int steps) {
+		//populate visited array
+		for (int i = 0; i < 575; i++) 
+			visited[i] = false;
+		//set visited[start location] to true
+		visited[location] = true;
+		//adjacency matrix calculated
+		this.calcAdjacencies();
+		//System.out.println(this.calcAdjacencies());
+		//calcTargets with location and steps 
+		this.calcTargets(location, steps);
+	}
+	
+	public Set<Integer> calcTargets(int thisCell, int numSteps) {
 		LinkedList<Integer> adjCells = new LinkedList<Integer>();
-		LinkedList<Integer> temp = getAdjList(location);
+		LinkedList<Integer> temp = getAdjList(thisCell);
 		for (int value : temp) {
 			if (!visited[value])
 				adjCells.add(value);
@@ -268,17 +283,23 @@ public class Board {
 		for (int adjCell : adjCells) {
 			visited[adjCell] = true;
 			//System.out.println("Num steps: " + numSteps);
-			if (steps == 1) {
+			if (numSteps == 1) {
 				targets.add(adjCell);
 				//System.out.println("Added " + adjCell + " to targets.");
 			}
 			else
-				getTargets(adjCell, (steps-1));
+				calcTargets(adjCell, (numSteps-1));
 			visited[adjCell] = false;
 		}
 		//System.out.println("Targets for " + thisCell + " taking " + numSteps + " steps: " + targets);
 		return targets;
-		//return set;
+	}
+	
+	public Set<Integer> getTargets(int location, int steps) {
+		Set<Integer> set = new HashSet<Integer>();
+		this.startTargets(location, steps);
+		set = calcTargets(location, steps);
+		return set;
 	}
 	
 	public LinkedList<Integer> getAdjList(int index) {
