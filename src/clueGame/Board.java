@@ -148,6 +148,16 @@ public class Board {
 		return index;
 	}
 	
+	public int getRow(int index) {
+		int row = index / numColumns;
+		return row;
+	}
+	
+	public int getCol(int index) {
+		int column = index % numColumns;
+		return column;
+	}
+	
 	public int[] calcRowandColumn(int index) {
 		int row = 0;
 		int col = 0;
@@ -289,23 +299,28 @@ public class Board {
 	public Set<Integer> calcTargets(int thisCell, int numSteps) {
 		LinkedList<Integer> adjCells = new LinkedList<Integer>();
 		LinkedList<Integer> temp = getAdjList(thisCell);
+		
 		for (int value : temp) {
 			if (!visited[value])
 				adjCells.add(value);
 		}
-		//System.out.println("AdjList for " + thisCell + ": " + adjCells);
+
 		for (int adjCell : adjCells) {
 			visited[adjCell] = true;
-			//System.out.println("Num steps: " + numSteps);
+
+			BoardCell cell = getBoardCellAt(getRow(adjCell), getCol(adjCell));
+			if (cell.isRoom()) {
+				targets.add(adjCell);
+			}
+			
 			if (numSteps == 1) {
 				targets.add(adjCell);
-				//System.out.println("Added " + adjCell + " to targets.");
-			}
-			else
+			} else {
 				calcTargets(adjCell, (numSteps-1));
+			}
 			visited[adjCell] = false;
 		}
-		//System.out.println("Targets for " + thisCell + " taking " + numSteps + " steps: " + targets);
+		
 		return targets;
 	}
 	

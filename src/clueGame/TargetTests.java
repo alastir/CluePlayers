@@ -24,6 +24,28 @@ public class TargetTests {
 		testBoard.loadBoard();
 	}
 	
+	//Test important helper functions
+	@Test
+	public void testRowColumn() {
+		testBoard.calcAdjacencies();
+		
+		int a = testBoard.calcIndex(15, 7);
+		assertEquals(15, testBoard.getRow(a));
+		assertEquals(7, testBoard.getCol(a));
+		
+		int b = testBoard.calcIndex(4, 9);
+		assertEquals(4, testBoard.getRow(b));
+		assertEquals(9, testBoard.getCol(b));
+		
+		int c = testBoard.calcIndex(11, 3);
+		assertEquals(11, testBoard.getRow(c));
+		assertEquals(3, testBoard.getCol(c));
+		
+		int d = testBoard.calcIndex(21, 14);
+		assertEquals(21, testBoard.getRow(d));
+		assertEquals(14, testBoard.getCol(d));
+	}
+	
 	//ADJACENCY TESTS FOR.............................................................
 
 	//Red: Locations with only walkways as adjacent locations 
@@ -252,11 +274,13 @@ public class TargetTests {
 		int a =  testBoard.calcIndex(7, 23);
 		int b =  testBoard.calcIndex(8, 16);
 		int c =  testBoard.calcIndex(9, 23);
+		int d = testBoard.calcIndex(9, 18); 
 
-		assertEquals(3, targets3.size());
+		assertEquals(4, targets3.size());
 		assertTrue(targets3.contains(a));
 		assertTrue(targets3.contains(b));
 		assertTrue(targets3.contains(c));
+		assertTrue(targets3.contains(d));
 	}
 	
 	@Test
@@ -277,8 +301,9 @@ public class TargetTests {
 		int k =  testBoard.calcIndex(22, 7);
 		int l =  testBoard.calcIndex(22, 9);
 		int m = testBoard.calcIndex(23, 8);
+		int n = testBoard.calcIndex(19, 7);
 
-		assertEquals(11, targets4.size());
+		assertEquals(12, targets4.size());
 		assertFalse(targets4.contains(a));
 		assertTrue(targets4.contains(b));
 		assertFalse(targets4.contains(c));
@@ -292,6 +317,7 @@ public class TargetTests {
 		assertTrue(targets4.contains(k));
 		assertTrue(targets4.contains(l));
 		assertTrue(targets4.contains(m));
+		assertTrue(targets4.contains(n));
 	}
 	
 	//White: Targets that allow the user to enter a room
@@ -307,12 +333,11 @@ public class TargetTests {
 		int e = testBoard.calcIndex(3, 17);
 		int f = testBoard.calcIndex(4, 16);
 		
-		System.out.println("Enter 1: " + targets1);
-		assertEquals(7, targets1.size()); //6 because not expecting d
+		assertEquals(7, targets1.size()); 
 		assertTrue(targets1.contains(a));
 		assertTrue(targets1.contains(b));
 		assertTrue(targets1.contains(c));
-		assertTrue(targets1.contains(d)); //Fails here on entering room to immediate left
+		assertTrue(targets1.contains(d)); 
 		assertTrue(targets1.contains(e));
 		assertTrue(targets1.contains(f));
 	}
@@ -328,12 +353,11 @@ public class TargetTests {
 		int d = testBoard.calcIndex(9, 18);
 		int e = testBoard.calcIndex(8, 21);
 
-		System.out.println("Enter 2: " + targets2);
-		assertEquals(5, targets2.size()); //Expecting 4 because d is not included 
+		assertEquals(5, targets2.size()); 
 		assertTrue(targets2.contains(a));
 		assertTrue(targets2.contains(b));
 		assertTrue(targets2.contains(c));
-		assertTrue(targets2.contains(d)); //Fails here on entering door immediately down
+		assertTrue(targets2.contains(d)); 
 		assertTrue(targets2.contains(e));
 	}
 
@@ -346,11 +370,9 @@ public class TargetTests {
 		int a = testBoard.calcIndex(16, 18);
 		int b = testBoard.calcIndex(16, 22);
 
-		System.out.println("Leaving 1: " + targets);
 		assertEquals(2, targets.size());
 		assertTrue(targets.contains(a));
 		assertTrue(targets.contains(b));
-		//Failing because the game isn't forcing you to exit the room from the doorway!
 	}
 
 	@Test
@@ -363,7 +385,6 @@ public class TargetTests {
 		int c = testBoard.calcIndex(20, 14);
 		int d = testBoard.calcIndex(21, 15);
 
-		System.out.println("Leaving 2: " + targets);
 		assertEquals(2, targets.size());
 		assertTrue(targets.contains(a));
 		assertTrue(targets.contains(b));
