@@ -190,21 +190,35 @@ public class Board {
 	}
 	
 	public LinkedList<Integer> addValid(LinkedList<Integer> adjList, int startR, int startC, int row, int col) {
-		BoardCell cell = getBoardCellAt(row, col);
-		if (cell.isWalkway()) {
-			adjList.add(calcIndex(row, col));
-		} else if (cell.isRoom()) {
-			RoomCell rCell = (RoomCell) cell;
+		BoardCell current = getBoardCellAt(startR, startC); //Our starting cell
+		BoardCell cellMove = getBoardCellAt(row, col); //The cell we are moving to 
 		
-			if (cell.isDoorway()) {
+		if (cellMove.isWalkway()) { //Allows us to move along a plain walkway
+			if (current.isRoom()) { //Allows us to exit a room properly onto the walkway
+				RoomCell rCellCurrent = (RoomCell) current;
 				char adjCellToThe = cellRelation(startR, startC, row, col);
-				if ((adjCellToThe == 'U') && (rCell.doorDirection == DoorDirection.DOWN))
+				if ((adjCellToThe == 'D') && (rCellCurrent.doorDirection == DoorDirection.DOWN))
 					adjList.add(calcIndex(row, col));
-				else if ((adjCellToThe == 'D') && (rCell.doorDirection == DoorDirection.UP))
+				else if ((adjCellToThe == 'U') && (rCellCurrent.doorDirection == DoorDirection.UP))
 					adjList.add(calcIndex(row, col));
-				else if ((adjCellToThe == 'R') && (rCell.doorDirection == DoorDirection.LEFT))
+				else if ((adjCellToThe == 'L') && (rCellCurrent.doorDirection == DoorDirection.LEFT))
 					adjList.add(calcIndex(row, col));
-				else if ((adjCellToThe == 'L') && (rCell.doorDirection == DoorDirection.RIGHT))
+				else if ((adjCellToThe == 'R') && (rCellCurrent.doorDirection == DoorDirection.RIGHT))
+					adjList.add(calcIndex(row, col));
+			} else { //Else if we are not exiting a room
+				adjList.add(calcIndex(row, col));
+			}
+		} else if (cellMove.isRoom()) {
+			RoomCell rCellMove = (RoomCell) cellMove;
+			if (cellMove.isDoorway()) { //Allows us to move into a doorway from correct direction
+				char adjCellToThe = cellRelation(startR, startC, row, col);
+				if ((adjCellToThe == 'U') && (rCellMove.doorDirection == DoorDirection.DOWN))
+					adjList.add(calcIndex(row, col));
+				else if ((adjCellToThe == 'D') && (rCellMove.doorDirection == DoorDirection.UP))
+					adjList.add(calcIndex(row, col));
+				else if ((adjCellToThe == 'R') && (rCellMove.doorDirection == DoorDirection.LEFT))
+					adjList.add(calcIndex(row, col));
+				else if ((adjCellToThe == 'L') && (rCellMove.doorDirection == DoorDirection.RIGHT))
 					adjList.add(calcIndex(row, col));
 			}
 		}

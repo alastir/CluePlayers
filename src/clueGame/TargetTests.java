@@ -171,10 +171,10 @@ public class TargetTests {
 		int right = testBoard.calcIndex(2, 8);
 		LinkedList<Integer> testList = testBoard.getAdjList(location);
 		assertFalse(testList.contains(up));
-		assertTrue(testList.contains(down));
+		assertFalse(testList.contains(down));
 		assertTrue(testList.contains(left));
 		assertFalse(testList.contains(right));
-		assertEquals(2, testList.size());
+		assertEquals(1, testList.size());
 		
 		location = testBoard.calcIndex(4, 2);
 		up = testBoard.calcIndex(3, 2);
@@ -346,6 +346,7 @@ public class TargetTests {
 		int a = testBoard.calcIndex(16, 18);
 		int b = testBoard.calcIndex(16, 22);
 
+		System.out.println("Leaving 1: " + targets);
 		assertEquals(2, targets.size());
 		assertTrue(targets.contains(a));
 		assertTrue(targets.contains(b));
@@ -357,14 +358,16 @@ public class TargetTests {
 		int location = testBoard.calcIndex(19, 15);
 		Set<Integer> targets = testBoard.getTargets(location, 2);
 
-		int a = testBoard.calcIndex(20, 14);
+		int a = testBoard.calcIndex(18, 16);
 		int b = testBoard.calcIndex(20, 16);
-		int c = testBoard.calcIndex(21, 15);
+		int c = testBoard.calcIndex(20, 14);
+		int d = testBoard.calcIndex(21, 15);
 
 		System.out.println("Leaving 2: " + targets);
-		assertEquals(3, targets.size());
+		assertEquals(2, targets.size());
 		assertTrue(targets.contains(a));
 		assertTrue(targets.contains(b));
-		assertTrue(targets.contains(c));
+		assertFalse(targets.contains(c));
+		assertFalse(targets.contains(d));
 	}
 }
