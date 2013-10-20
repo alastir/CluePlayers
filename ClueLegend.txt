@@ -1,0 +1,11 @@
+C, Man Cave
+T, Tardis
+B, Tower of Babel
+G, Gold Room
+R, R'leyh
+L, Labryinth
+S, Spaceship
+D, Bed Room
+M, Secret Mine
+w, Walkway
+X, Closet
